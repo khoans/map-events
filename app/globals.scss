@@ -53,6 +53,10 @@
 body {
   height: 100vh;
   background-color: var(--body-bg);
+
+  @media screen and (max-width: 875px) {
+    font-size: 90%;
+  }
 }
 
 .content {
@@ -61,6 +65,27 @@ body {
   height: 100%;
   display: flex;
   gap: 1.5rem;
+  @media screen and (max-width: 875px) {
+      flex-direction: column;
+
+      .map-content {
+        width: 100%;
+      }
+    }
+  .map-content {
+    width: 75%;
+    @media screen and (max-width: 1298px) {
+      width: 65%;
+    }
+    @media screen and (max-width: 945px) {
+      width: 60%;
+    }
+    @media screen and (max-width: 875px) {
+        width: 100%;
+        height: 60%;
+    }
+
+  }
 }
 
 .map-container {
@@ -80,6 +105,11 @@ body {
   border: 2px solid var(--border-color);
   color: var(--color--white);
   overflow-y: auto;
+
+@media screen and (max-width: 875px) {
+  height: 30%;
+  
+}
 
   &__title {
     font-weight: 700;

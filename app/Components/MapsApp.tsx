@@ -55,7 +55,7 @@ function MapsApp() {
 
   return (
     <div className="content">
-      <div className="flex flex-col gap-6 w-4/5 h-full">
+      <div className="map-content flex flex-col gap-6">
         {/* <div className="h-12"></div> */}
         <Filter setSelectedCategory={setSelectedCategory} />
         <MapContainer
