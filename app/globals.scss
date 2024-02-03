@@ -1,4 +1,5 @@
 @use "./styles/popup";
+@use "./styles/filter";
 
 @tailwind base;
 @tailwind components;
@@ -13,6 +14,35 @@
   --color--white: #fff;
   --color--purple: #7263f3;
   --color--black: #000;
+  --box-shadow: 0 0 15px rgba(0,0,0,0.1)
+  --brad-1: 0.5rem;
+  --brad-2: 1rem;
+  --brad-3: 1.5rem;
+  --brad-4: 2rem;
+}
+.dark-theme {
+  --body-bg: #1e1e1e;
+  --body--bg: #1e1e1e;
+  --events--bg: #262626;
+  --border-color: #363636;
+  --border-color-2: #454545;
+  --color--white: #fff;
+  --color--purple: #7263f3;
+  --color--black: #000;
+  --box-shadow: 0 0 15px rgba(0,0,0,0.1)
+  --brad-1: 0.5rem;
+  --brad-2: 1rem;
+  --brad-3: 1.5rem;
+  --brad-4: 2rem;
+}
+
+.light-theme {
+  --body-bg: #fff;
+  --body--bg: #ededed;
+  --events--bg: #f9f9f9;
+  --border-color: #e5e5e5;
+  --border-color-2: #e5e5e5;
+  --color--white: #333;
   --box-shadow: 0 0 15px rgba(0,0,0,0.1)
   --brad-1: 0.5rem;
   --brad-2: 1rem;
@@ -78,4 +108,55 @@ body {
     width: 4px;
   }
 
+}
+
+
+.theme-toggler {
+  display: flex;
+  align-items: center;
+
+  &__checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  &__checkbox:checked + label {
+    background-color: var(--header--bg)
+  }
+
+  &__checkbox:checked + label::after {
+    left: calc(100% - 3px);
+    transform: translateX(-100%)
+  }
+
+  &__label {
+    position: relative;
+    width: 54px;
+    height: 29px;
+    background: var(--body--bg);
+    display: block;
+    border-radius: 100px;
+    cursor: pointer;
+
+    transition: background-color 0.25s ease-in-out;
+    border: 2px solid var(--border-color-2);
+    text-indent: -9999px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: calc(100% - 6px);
+      background: var(--color--white);
+      border-radius: 90px;
+      transition: 0.3s;
+    }
+
+    &:active::after {
+      width: 40px;
+    }
+  }
 }

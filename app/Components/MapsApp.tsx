@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import eventsData from "../historyEvents";
 import ZoomToMarker from "./ZoomToMarker";
+import Filter from "./Filter";
 
 export interface HistoricalEvent {
   id: number;
@@ -33,6 +34,7 @@ function MapsApp() {
     return savedFavourites ? JSON.parse(savedFavourites) : [];
   });
   const [activeEvent, setActiveEvent] = useState<HistoricalEvent | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const handleFavourite = (eventId: number) => {
     let updatedFavourites = favourites.filter((id) => id !== eventId);
@@ -53,8 +55,9 @@ function MapsApp() {
 
   return (
     <div className="content">
-      <div className="flex flex-col w-4/5 h-full">
-        <div className="h-12"></div>
+      <div className="flex flex-col gap-6 w-4/5 h-full">
+        {/* <div className="h-12"></div> */}
+        <Filter setSelectedCategory={setSelectedCategory} />
         <MapContainer
           center={defaultPosition}
           zoom={10}
@@ -62,20 +65,25 @@ function MapsApp() {
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-          {eventsData.map((event) => {
-            return (
-              <Marker
-                key={event.id}
-                position={event.position}
-                icon={icon}
-                eventHandlers={{
-                  click: () => {
-                    setActiveEvent(event);
-                  },
-                }}
-              ></Marker>
-            );
-          })}
+          {eventsData
+            .filter(
+              (event) =>
+                !selectedCategory || event.category === selectedCategory
+            )
+            .map((event) => {
+              return (
+                <Marker
+                  key={event.id}
+                  position={event.position}
+                  icon={icon}
+                  eventHandlers={{
+                    click: () => {
+                      setActiveEvent(event);
+                    },
+                  }}
+                ></Marker>
+              );
+            })}
           {activeEvent && (
             <Popup position={activeEvent.position}>
               <div className="popup-inner">
