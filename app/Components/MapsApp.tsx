@@ -44,7 +44,7 @@ function MapsApp() {
 
   return (
     <div className="content">
-      <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col w-4/5 h-full">
         <div className="h-12"></div>
         <MapContainer
           center={defaultPosition}
@@ -88,6 +88,25 @@ function MapsApp() {
             </Popup>
           )}
         </MapContainer>
+      </div>
+      <div className="liked-events">
+        <h2 className="liked-events__title">
+          <i className="fa-solid fa-star"></i> Favourite Events
+        </h2>
+        <ul>
+          {favourites
+            .map((id) => {
+              // Turn id into event object
+              return eventsData.find((event) => event.id === id);
+            })
+            .map((event) => {
+              return (
+                <li className="liked-events__event" key={event?.id}>
+                  <h3>{event?.title}</h3>
+                </li>
+              );
+            })}
+        </ul>
       </div>
     </div>
   );
