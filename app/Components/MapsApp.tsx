@@ -6,6 +6,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import eventsData from "../historyEvents";
+import ZoomToMarker from "./ZoomToMarker";
 
 export interface HistoricalEvent {
   id: number;
@@ -42,13 +43,21 @@ function MapsApp() {
     localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
   };
 
+  const handleListItemClick = (eventId: number) => {
+    const event = eventsData.find((event) => event.id === eventId);
+
+    if (event) {
+      setActiveEvent(event);
+    }
+  };
+
   return (
     <div className="content">
       <div className="flex flex-col w-4/5 h-full">
         <div className="h-12"></div>
         <MapContainer
           center={defaultPosition}
-          zoom={1}
+          zoom={10}
           className="map-container"
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -87,6 +96,9 @@ function MapsApp() {
               </button>
             </Popup>
           )}
+          {activeEvent && (
+            <ZoomToMarker position={activeEvent.position} zoomLevel={13} />
+          )}
         </MapContainer>
       </div>
       <div className="liked-events">
@@ -101,7 +113,13 @@ function MapsApp() {
             })
             .map((event) => {
               return (
-                <li className="liked-events__event" key={event?.id}>
+                <li
+                  className="liked-events__event"
+                  key={event?.id}
+                  onClick={() => {
+                    handleListItemClick(event?.id as number);
+                  }}
+                >
                   <h3>{event?.title}</h3>
                 </li>
               );
