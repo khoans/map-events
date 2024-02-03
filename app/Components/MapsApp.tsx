@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -27,6 +27,21 @@ function MapsApp() {
     iconAnchor: [12, 41],
   });
 
+  const [favourites, setFavourites] = useState<number[]>(() => {
+    const savedFavourites = localStorage.getItem("favourites");
+    return savedFavourites ? JSON.parse(savedFavourites) : [];
+  });
+  const [activeEvent, setActiveEvent] = useState<HistoricalEvent | null>(null);
+
+  const handleFavourite = (eventId: number) => {
+    let updatedFavourites = favourites.filter((id) => id !== eventId);
+    if (!favourites.includes(eventId)) {
+      updatedFavourites = [eventId, ...updatedFavourites];
+    }
+    setFavourites(updatedFavourites);
+    localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
+  };
+
   return (
     <div className="content">
       <div className="flex flex-col w-full h-full">
@@ -40,22 +55,38 @@ function MapsApp() {
 
           {eventsData.map((event) => {
             return (
-              <Marker key={event.id} position={event.position} icon={icon}>
-                <Popup>
-                  <div className="popup-inner">
-                    <h2 className="popup-inner__title">{event.title}</h2>
-                  </div>
-                  <p className="popup-inner__description">
-                    {event.description}
-                  </p>
-                  <button className="popup-inner__button">
-                    <span>{emptyStar}</span>
-                    Favourite
-                  </button>
-                </Popup>
-              </Marker>
+              <Marker
+                key={event.id}
+                position={event.position}
+                icon={icon}
+                eventHandlers={{
+                  click: () => {
+                    setActiveEvent(event);
+                  },
+                }}
+              ></Marker>
             );
           })}
+          {activeEvent && (
+            <Popup position={activeEvent.position}>
+              <div className="popup-inner">
+                <h2 className="popup-inner__title">{activeEvent.title}</h2>
+              </div>
+              <p className="popup-inner__description">
+                {activeEvent.description}
+              </p>
+              <button
+                className="popup-inner__button"
+                onClick={() => handleFavourite(activeEvent.id)}
+              >
+                {favourites.includes(activeEvent.id) ? (
+                  <span>{fullStar} Unfavourite</span>
+                ) : (
+                  <span>{emptyStar} Favourite</span>
+                )}
+              </button>
+            </Popup>
+          )}
         </MapContainer>
       </div>
     </div>
